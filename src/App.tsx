@@ -1,13 +1,11 @@
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "./redux/store";
 
-import { addTodo, removeTodo, setTodoStatus } from "./redux/todoSlice";
+
+import { removeTodo, setTodoStatus } from "./redux/todoSlice";
 
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -16,9 +14,11 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Checkbox from "@material-ui/core/Checkbox";
 
+import MyInput from "./components/input";
+import TodoItem from "./components/todoItem";
+
 
 function App() {
-  const [todoDescription, setTodoDescription] = useState("");
 
   const todoList = useSelector((state: RootState) => state);
   const dispatch = useDispatch<AppDispatch>();
@@ -28,37 +28,10 @@ function App() {
       <Typography style={{ textAlign: "center" }} variant="h3">
         Redux List App
       </Typography>
-      <TextField
-        variant="outlined"
-        label="To Do Item"
-        fullWidth
-        onChange={(e) => setTodoDescription(e.target.value)}
-        value={todoDescription}
-      />
-      <Button variant="contained" color="primary" fullWidth 
-        onClick={()=>{
-          dispatch(addTodo(todoDescription));
-          setTodoDescription("");
-        }}>
-        Add Todo
-      </Button>
-
+      <MyInput />
       <List>
       {todoList.map((todo) => (
-        <ListItem key={todo.id}>
-          <ListItemText style={{ textDecoration: todo.completed ? "line-through" : "none" }}>{todo.description}</ListItemText>
-          <ListItemSecondaryAction>
-            <IconButton onClick={() => {dispatch(removeTodo(todo.id))}}>
-              <DeleteIcon />
-            </IconButton>
-            <Checkbox edge="end" value={todo.completed}
-              onChange={() => {dispatch(setTodoStatus({id: todo.id, completed: !todo.completed}))}} />
-              
-
-            
-          </ListItemSecondaryAction>
-        </ListItem>
-      
+        <TodoItem todo={todo} key={todo.id} />
       ))}
       </List>
     </Container>
